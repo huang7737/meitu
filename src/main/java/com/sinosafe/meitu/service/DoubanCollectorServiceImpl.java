@@ -1,6 +1,7 @@
 package com.sinosafe.meitu.service;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,7 +82,7 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 			String imageUrl=matcher.group(1);
 			logger.info(imageUrl);
 			try{
-				String localPath=NetUtil.download(imageUrl, folder+group+File.separator);
+				String localPath=NetUtil.download(imageUrl, folder+DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator);
 				Map<String,String> paramObject=new HashMap<String,String>();
 				paramObject.put("localPath", localPath);
 				paramObject.put("topicUrl", topicUrl);

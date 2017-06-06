@@ -74,16 +74,16 @@
 			<properties>
 				<cfg-file>test</cfg-file>
 			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>   <!-- 默认激活本环境 -->
-			</activation>
+			
 		</profile>
 		<profile>
 			<id>local</id>         <!-- 本地环境 -->
 			<properties>
 				<cfg-file>local</cfg-file>
 			</properties>
-			
+			<activation>
+				<activeByDefault>true</activeByDefault>   <!-- 默认激活本环境 -->
+			</activation>
 		</profile>
 	</profiles>
 
