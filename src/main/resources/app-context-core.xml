@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+    					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!--系统参数配置文件，使用PropertyPlaceholderConfigurer读取 cfg.properties配置内容-->
+	<context:property-placeholder location="classpath:cfg.properties" /> 
+
+	<!-- 组件扫描 : @Component/@Service等，自动生成bean，使用类名作为bean id -->
+	
+	<!-- 业务部分，请自行添加修改 -->
+	<context:component-scan base-package="com.sinosafe">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+	
+	<!-- 引入持久层相关配置 -->
+	<import resource="app-context-persistent.xml" />
+
+	
+	<import resource="app-context-task.xml" />
+ 	
+	<!-- 引入业务层bean相关配置
+	<import resource="app-context-batch.xml" />
+	 -->
+	
+</beans>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- DataSource数据源配置 -->
+	<!-- 本地数据源DataSource配置 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">  
+		<property name="url" value="${datasource.url}" />  
+		<property name="username" value="${datasource.username}" />  
+		<property name="password" value="${datasource.password}" />  
+		<property name="filters" value="stat" />  
+		<property name="maxActive" value="${datasource.maxPoolSize}" />   
+		<property name="initialSize" value="${datasource.initialPoolSize}" />  
+		<property name="maxWait" value="${datasource.maxPoolSize}" />  
+		<property name="minIdle" value="${datasource.minPoolSize}" />  
+		<property name="timeBetweenEvictionRunsMillis" value="3000" />  
+		<property name="minEvictableIdleTimeMillis" value="300000" />  
+		<property name="validationQuery" value="SELECT 'x'" />  
+		<property name="testWhileIdle" value="true" />  
+		<property name="testOnBorrow" value="false" />  
+		<property name="testOnReturn" value="false" />  
+		<property name="poolPreparedStatements" value="true" />  
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />  
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 应用系统将对应的SqlMapper配置到,对应的mybatis-config.xml中就可以。  
+		<property name="configLocation" value="classpath:com/hf/framework/service/dao/Mybaits-config.xml" />-->
+		
+		<property name="dataSource" ref="dataSource" />
+		<!-- 框架配置，不可修改。 -->
+		<property name="mapperLocations">
+			<list>
+			    <value>classpath*:/mybatis/**/*Mapper.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 公共Dao配置 -->
+	<bean id="baseDao" class="com.sinosafe.dao.CommonDaoImpl">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+		<property name="nameSpace" value="com.sinosafe.dao.CommonDao"></property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 定义拦截器，用来指定事物属性，级别，和异常处理 -->
+	<aop:config>
+		<aop:pointcut id="serviceMethods" expression="execution(* com.hf.framework.bm.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods" />
+	</aop:config>
+
+	<!-- 配置事务传播特性 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="get*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="process*" propagation="REQUIRED" />
+			<tx:method name="*" propagation="SUPPORTS" read-only="true" />
+			<!-- <tx:method name="*" propagation="REQUIRED" isolation="READ_COMMITTED"
+				timeout="-1" /> -->
+		</tx:attributes>
+	</tx:advice>
+	
+</beans>

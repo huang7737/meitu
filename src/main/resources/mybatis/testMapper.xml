@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--佛山路路通业务SQL-->
+<mapper namespace="com.sinosafe.meitu" >
+	<!-- 查询收款合计金额 -->
+	<select id="findPicture" parameterType="map" resultType="map">
+	<![CDATA[
+		SELECT * FROM meitu_topic where groupId = #{groupId,jdbcType=VARCHAR} and topicUrl=#{topicUrl,jdbcType=VARCHAR}
+	]]>
+	</select>
+	
+	<insert id="addPicture" parameterType="map" > 
+        insert into meitu_topic(groupId,topicId,topicUrl,localPath,imageId)  
+             values(#{groupId},#{topicId},#{topicUrl},#{localPath},#{imageId})  
+    </insert>
+</mapper>

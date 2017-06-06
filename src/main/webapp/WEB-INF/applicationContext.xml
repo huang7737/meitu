@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd" >
+    
+    <!--框架必须的基础配置文件 -->
+
+        <import resource="classpath:app-context-core.xml"/>
+
+    <!-- 框架必须文件================================================================================= -->
+    
+    
+    <!--业务配置文件，各业务系统可以按模块，分成多个配置文件，从而避免了文件冲突 
+
+        <import resource="app-context-claim.xml"/>
+        <import resource="classpath:com/hf/claim/res/app-context-claim.xml"/>
+
+     业务配置文件================================================================================= -->
+
+		
+</beans>
