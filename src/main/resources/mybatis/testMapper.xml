@@ -10,8 +10,8 @@
 	</select>
 	
 	<insert id="addPicture" parameterType="map" > 
-        insert into meitu_topic(groupId,topicId,topicUrl,localPath,imageId)  
-             values(#{groupId},#{topicId},#{topicUrl},#{localPath},#{imageId})  
+        insert into meitu_topic(groupId,topicId,topicUrl,localPath,imageId,access_url)  
+             values(#{groupId},#{topicId},#{topicUrl},#{localPath},#{imageId},#{access_url})  
     </insert>
     
     <!-- 遍历-->

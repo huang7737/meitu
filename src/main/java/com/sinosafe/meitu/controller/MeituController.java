@@ -31,7 +31,7 @@ public class MeituController {
 		try {
 			Map<String,String> paramObject=new HashMap<String,String>();
 			int pageSize=Integer.parseInt(pageSizeStr);
-			paramObject.put("startIndex",Integer.parseInt(page)*pageSize+"");
+			paramObject.put("startIndex",(Integer.parseInt(page)-1)*pageSize+"");
 			paramObject.put("pageSize",pageSize+"");
 			List dataList=dao.selectList("com.sinosafe.meitu.findAllPicture", paramObject);
 			resultMap.put("dataList", dataList);

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.sinosafe.dao.CommonDao;
+import com.sinosafe.util.CloudStoreUtil;
 import com.sinosafe.util.NetUtil;
 
 @Service
@@ -51,18 +53,21 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 			try {
 				String pageUrl=groupUrl+start;
 				start+=pageSize;
+				logger.info(pageUrl);
 				String topicListPage=NetUtil.httpGet(pageUrl, NetUtil.TEXT_FORMAT_PLAIN);
-				Pattern pattern = Pattern.compile("<a href=\"([^\"]+?/group/topic/[^\"]+?)\"");
-				Matcher matcher = pattern.matcher(topicListPage);
-				boolean isFind = matcher.find();
-				if(!isFind){
-					logger.warn(pageUrl);
-				}
-				while (isFind) {
-					String topicPage=matcher.group(1);
-					logger.info("Find topic:"+topicPage);
-					collectImg(topicPage,group);
-					isFind=matcher.find();
+				if(topicListPage!=null){
+					Pattern pattern = Pattern.compile("<a href=\"([^\"]+?/group/topic/[^\"]+?)\"");
+					Matcher matcher = pattern.matcher(topicListPage);
+					boolean isFind = matcher.find();
+					if(!isFind){
+						logger.warn(pageUrl);
+					}
+					while (isFind) {
+						String topicPage=matcher.group(1);
+						logger.info("Find topic:"+topicPage);
+						collectImg(topicPage,group);
+						isFind=matcher.find();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -88,9 +93,16 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 				paramObject.put("imageId", imageUrl);
 				List list=dao.selectList("com.sinosafe.meitu.findPicture", paramObject);
 				if(CollectionUtils.isEmpty(list)){
-					String localPath=NetUtil.download(imageUrl, folder+DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator);
-					paramObject.put("localPath", localPath);
-					dao.update("com.sinosafe.meitu.addPicture", paramObject);
+					String filePath=DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator;
+					String fileName= NetUtil.getFileName(imageUrl);  
+		            String cosPath=filePath+fileName;
+					String localPath=NetUtil.download(imageUrl, folder+filePath);
+					String access_url=CloudStoreUtil.send2Cloud(cosPath.replace("\\", "/"), localPath);
+					if(StringUtils.isNoneBlank(access_url)){
+						paramObject.put("localPath", localPath);
+						paramObject.put("access_url", access_url);
+						dao.update("com.sinosafe.meitu.addPicture", paramObject);
+					}
 				}
 			}catch(Exception e){
 				e.printStackTrace();
