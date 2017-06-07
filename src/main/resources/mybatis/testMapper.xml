@@ -5,7 +5,7 @@
 	<!-- 查询收款合计金额 -->
 	<select id="findPicture" parameterType="map" resultType="map">
 	<![CDATA[
-		SELECT * FROM meitu_topic where groupId = #{groupId,jdbcType=VARCHAR} and topicUrl=#{topicUrl,jdbcType=VARCHAR}
+		SELECT * FROM meitu_topic where groupId = #{groupId,jdbcType=VARCHAR} and imageId=#{imageId,jdbcType=VARCHAR}
 	]]>
 	</select>
 	
