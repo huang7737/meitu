@@ -24,11 +24,13 @@ public class MeituController {
 	
 	@RequestMapping("/listPicture")
 	@ResponseBody
-	public  Map<String, Object> test(HttpServletRequest request,HttpServletResponse response,@RequestParam("page")String page) throws Exception {
+	public  Map<String, Object> test(HttpServletRequest request,HttpServletResponse response
+			,@RequestParam("pageSize")String pageSizeStr
+			,@RequestParam("page")String page) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			Map<String,String> paramObject=new HashMap<String,String>();
-			int pageSize=20;
+			int pageSize=Integer.parseInt(pageSizeStr);
 			paramObject.put("startIndex",Integer.parseInt(page)*pageSize+"");
 			paramObject.put("pageSize",pageSize+"");
 			List dataList=dao.selectList("com.sinosafe.meitu.findAllPicture", paramObject);
