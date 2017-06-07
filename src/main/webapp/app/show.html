@@ -27,7 +27,7 @@ function showPicture(){
 	    }else{
 	    	var imgHtml="";
 	    	for(var i=0;i<result.dataList.length;i++){
-	    		$("#detail").append("<div><img src='"+result.dataList[i].localPath.replace("/meitu","http://shenzhenwan.com.cn:8080/pic")+"' /></div>")
+	    		$("#detail").append("<div><img src='"+result.dataList[i].access_url+"' /></div>")
 	    	}
 	    }
 	  });

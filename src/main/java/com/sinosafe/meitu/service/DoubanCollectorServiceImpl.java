@@ -95,7 +95,7 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 				if(CollectionUtils.isEmpty(list)){
 					String filePath=DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator;
 					String fileName= NetUtil.getFileName(imageUrl);  
-		            String cosPath=filePath+fileName;
+		            String cosPath="/"+filePath+fileName;
 					String localPath=NetUtil.download(imageUrl, folder+filePath);
 					String access_url=CloudStoreUtil.send2Cloud(cosPath.replace("\\", "/"), localPath);
 					if(StringUtils.isNoneBlank(access_url)){
