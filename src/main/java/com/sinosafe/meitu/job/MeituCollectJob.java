@@ -21,7 +21,7 @@ public class MeituCollectJob {
 	@Resource
 	MeituCollectorService service;
 	
-	@Scheduled(fixedDelay=1800000)//30分钟执行一次
+	@Scheduled(fixedDelay=900000)//15
     public void execute(){
 		logger.info("start collect run");
 		int num = (int) (Math.random() * 100);

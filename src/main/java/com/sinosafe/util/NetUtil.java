@@ -54,7 +54,11 @@ public class NetUtil {
      */
     public static final String TEXT_FORMAT_JSON = "4";
 	
-	
+    private static CloseableHttpClient client=null;
+    static{
+    	client = HttpClients.createDefault();
+    }
+    
 	/**
 	 * https方式
 	 * @param url
@@ -96,7 +100,6 @@ public class NetUtil {
 	public static String httpSend(String url, String textFormat, String data)
 			throws DocumentException, UnsupportedEncodingException {
         //HttpClient  
-        CloseableHttpClient client = HttpClients.createDefault();
         HttpPost  postMethod = new HttpPost(url);
 		HttpEntity entity = null;
 		entity = createEnity(textFormat, data);
@@ -118,7 +121,6 @@ public class NetUtil {
 	public static String httpGet(String url, String textFormat)
 			throws DocumentException, UnsupportedEncodingException {
         //HttpClient  
-        CloseableHttpClient client = HttpClients.createDefault();
         HttpGet  getMethod = new HttpGet(url);
 		String result = null;
 		try {
@@ -167,8 +169,6 @@ public class NetUtil {
 	public static String httpSend(String url, byte[] content)
 			throws DocumentException, UnsupportedEncodingException {
         //HttpClient  
-        CloseableHttpClient client = HttpClients.createDefault();
-        
         HttpPost  postMethod = new HttpPost(url);
 		HttpEntity entity = new ByteArrayEntity(content);
 		postMethod.setEntity(entity);
@@ -200,8 +200,8 @@ public class NetUtil {
 	private static void closeClient(CloseableHttpClient client) {
 		// 关闭连接,释放资源    
 		try {
-			client.close();  
-		} catch (IOException e) {  
+			//client.close();  
+		} catch (Exception e) {  
 		    e.printStackTrace();  
 		}
 	}
@@ -241,7 +241,6 @@ public class NetUtil {
     
     public static String download(String url, String filepath) {  
         try {  
-        	CloseableHttpClient client = HttpClients.createDefault(); 
             HttpGet httpget = new HttpGet(url);  
             HttpResponse response = client.execute(httpget);  
   

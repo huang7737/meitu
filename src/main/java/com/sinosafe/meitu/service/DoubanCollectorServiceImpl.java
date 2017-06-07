@@ -49,7 +49,7 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 	
 	public void collectByGroup(String group,String groupUrl){
 		int start=0;
-		while(start<=50){
+		while(start<=25){
 			try {
 				String pageUrl=groupUrl+start;
 				start+=pageSize;
