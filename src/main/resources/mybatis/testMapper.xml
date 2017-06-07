@@ -13,4 +13,11 @@
         insert into meitu_topic(groupId,topicId,topicUrl,localPath,imageId)  
              values(#{groupId},#{topicId},#{topicUrl},#{localPath},#{imageId})  
     </insert>
+    
+    <!-- 遍历-->
+	<select id="findAllPicture" parameterType="map" resultType="map">
+	<![CDATA[
+		SELECT * FROM meitu_topic order by createDate desc limit ${startIndex},${pageSize}
+	]]>
+	</select>
 </mapper>

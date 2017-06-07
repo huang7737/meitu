@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sinosafe.service.CommonApiService;
 
 @Controller
-@RequestMapping("/app")
+@RequestMapping("/test")
 public class CommonController {
 	
 	@Resource
