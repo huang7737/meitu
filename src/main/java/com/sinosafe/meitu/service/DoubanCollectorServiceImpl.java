@@ -82,24 +82,20 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 			String imageUrl=matcher.group(1);
 			logger.info(imageUrl);
 			try{
-				String localPath=NetUtil.download(imageUrl, folder+DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator);
 				Map<String,String> paramObject=new HashMap<String,String>();
-				paramObject.put("localPath", localPath);
-				paramObject.put("topicUrl", topicUrl);
-				paramObject.put("groupId", group);
+				paramObject.put("topicUrl", topicUrl);//查询必须
+				paramObject.put("groupId", group);//查询必须
 				paramObject.put("imageId", imageUrl);
-				store2DB(paramObject);
+				List list=dao.selectList("com.sinosafe.meitu.findPicture", paramObject);
+				if(CollectionUtils.isEmpty(list)){
+					String localPath=NetUtil.download(imageUrl, folder+DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator);
+					paramObject.put("localPath", localPath);
+					dao.update("com.sinosafe.meitu.addPicture", paramObject);
+				}
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 			isFind=matcher.find();
-		}
-	}
-	
-	private void store2DB(Map<String,String> paramObject){
-		List list=dao.selectList("com.sinosafe.meitu.findPicture", paramObject);
-		if(CollectionUtils.isEmpty(list)){
-			dao.update("com.sinosafe.meitu.addPicture", paramObject);
 		}
 	}
 	
