@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div id="detail"></div>
-	<div id="more" style="width:100%;height:50px; background:#ccc;">更多图片</div>
+	<div id="more" style="width:100%;height:50px; background:#ccc;display:none;">更多图片</div>
 </body>
 <script type="text/javascript">
 var page=1;
@@ -17,6 +17,17 @@ $(document).ready(function(){
 		showPicture();
 	});
 	showPicture();
+});
+
+$(window).scroll(
+		function() {
+		var scrollTop = $(this).scrollTop();
+		var scrollHeight = $(document).height();
+		var windowHeight = $(this).height();
+		if (scrollTop + windowHeight >= scrollHeight-5) {
+			page++;
+			showPicture();
+		}
 });
 
 function showPicture(){

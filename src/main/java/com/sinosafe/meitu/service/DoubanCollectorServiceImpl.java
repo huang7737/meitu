@@ -97,14 +97,16 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 					String fileName= NetUtil.getFileName(imageUrl);  
 		            String cosPath="/"+filePath+fileName;
 					String localPath=NetUtil.download(imageUrl, folder+filePath);
-					String access_url=CloudStoreUtil.send2Cloud(cosPath.replace("\\", "/"), localPath);
-					if(StringUtils.isNoneBlank(access_url)){
-						paramObject.put("localPath", localPath);
-						paramObject.put("access_url", access_url);
-						dao.update("com.sinosafe.meitu.addPicture", paramObject);
+					if(StringUtils.isNoneBlank(localPath)){
+						String access_url=CloudStoreUtil.send2Cloud(cosPath.replace("\\", "/"), localPath);
+						if(StringUtils.isNoneBlank(access_url)){
+							paramObject.put("localPath", localPath);
+							paramObject.put("access_url", access_url);
+							dao.update("com.sinosafe.meitu.addPicture", paramObject);
+						}
 					}
 				}
-			}catch(Exception e){
+			}catch(Throwable e){
 				e.printStackTrace();
 			}
 			isFind=matcher.find();

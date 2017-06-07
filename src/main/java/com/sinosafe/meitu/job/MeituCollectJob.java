@@ -28,11 +28,10 @@ public class MeituCollectJob {
 		try {
 			logger.info("sleep "+num+" seconds");
 			Thread.sleep(num*1000);
-		} catch (InterruptedException e) {
+			service.excute();
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
-		service.excute();
 		logger.info("end collect run");
     }
 }
