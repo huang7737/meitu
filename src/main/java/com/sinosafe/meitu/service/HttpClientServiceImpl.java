@@ -46,13 +46,13 @@ public class HttpClientServiceImpl implements HttpClientService{
 	private  Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private PoolingHttpClientConnectionManager poolConnManager;
-	private final int maxTotalPool = 10;
-	private final int maxConPerRoute = 5;
+	private final int maxTotalPool = 200;
+	private final int maxConPerRoute = 20;
 	private final int socketTimeout = 2000;
 	private final int connectionRequestTimeout = 3000;
 	private final int connectTimeout = 1000;
 
-	@PostConstruct
+//	@PostConstruct
 	public void init() {
 		try {
 			SSLContext sslcontext = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();

@@ -45,9 +45,6 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 		String[] groupss=groups.split(",");
 		for(String group:groupss){
 			try {
-				int num = (int) (Math.random() * 10);
-				logger.info("sleep "+num+" seconds");
-				Thread.sleep(num*1000);
 				String groupUrl="https://www.douban.com/group/"+group+"/discussion?start=";
 				collectByGroup(group,groupUrl);
 			}catch(Exception e){
@@ -108,6 +105,9 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 				paramObject.put("imageId", imageUrl);
 				List list=dao.selectList("com.sinosafe.meitu.findPicture", paramObject);
 				if(CollectionUtils.isEmpty(list)){
+					int num = (int) (Math.random() * 10);
+					logger.info("sleep "+num+" seconds");
+					Thread.sleep(num*1000);
 					String filePath=DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator;
 					String fileName= getFileName(imageUrl);  
 		            String cosPath="/"+filePath+fileName;
