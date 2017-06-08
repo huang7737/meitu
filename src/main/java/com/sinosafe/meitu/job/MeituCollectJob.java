@@ -24,7 +24,7 @@ public class MeituCollectJob {
 	@Scheduled(fixedDelay=900000)//15
     public void execute(){
 		logger.info("start collect run");
-		int num = (int) (Math.random() * 100);
+		int num = (int) (Math.random() * 10);
 		try {
 			logger.info("sleep "+num+" seconds");
 			Thread.sleep(num*1000);

@@ -1,5 +1,8 @@
 package com.sinosafe.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSONObject;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -7,6 +10,7 @@ import com.qcloud.cos.request.UploadFileRequest;
 import com.qcloud.cos.sign.Credentials;
 
 public class CloudStoreUtil {
+	private static Logger logger = LoggerFactory.getLogger(CloudStoreUtil.class);
 	private static COSClient cosClient=null;
 	private static String bucketName="meitu";
 	static{
@@ -33,7 +37,7 @@ public class CloudStoreUtil {
 		UploadFileRequest uploadFileRequest = new UploadFileRequest(bucketName,cosPath, localPath);
 		String retString = cosClient.uploadFile(uploadFileRequest);
 		JSONObject retJson=JSONObject.parseObject(retString);
-		System.out.println(retString);
+		logger.info("retCode:"+retString);
 		if(retJson.getIntValue("code")==0){
 			return retJson.getJSONObject("data").getString("access_url");
 		}

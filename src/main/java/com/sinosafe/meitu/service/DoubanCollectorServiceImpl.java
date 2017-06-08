@@ -20,7 +20,6 @@ import org.springframework.util.CollectionUtils;
 
 import com.sinosafe.dao.CommonDao;
 import com.sinosafe.util.CloudStoreUtil;
-import com.sinosafe.util.NetUtil;
 
 @Service
 public class DoubanCollectorServiceImpl implements MeituCollectorService{
@@ -36,6 +35,9 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 	
 	@Resource
     private CommonDao dao;
+	
+	@Resource
+	private HttpClientService httpClientService;
 	
 
 	@Override
@@ -54,7 +56,7 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 				String pageUrl=groupUrl+start;
 				start+=pageSize;
 				logger.info(pageUrl);
-				String topicListPage=NetUtil.httpGet(pageUrl, NetUtil.TEXT_FORMAT_PLAIN);
+				String topicListPage=httpClientService.httpGet(pageUrl);
 				if(topicListPage!=null){
 					Pattern pattern = Pattern.compile("<a href=\"([^\"]+?/group/topic/[^\"]+?)\"");
 					Matcher matcher = pattern.matcher(topicListPage);
@@ -76,7 +78,7 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 	}
 	
 	private void collectImg(String topicUrl,String group) throws Exception{
-		String topicListPage=NetUtil.httpGet(topicUrl, NetUtil.TEXT_FORMAT_PLAIN);
+		String topicListPage=httpClientService.httpGet(topicUrl);
 		Pattern pattern = Pattern.compile("src=\"([^\"]+?/large/[^\"]+?)\"");
 		Matcher matcher = pattern.matcher(topicListPage);
 		boolean isFind = matcher.find();
@@ -94,9 +96,9 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 				List list=dao.selectList("com.sinosafe.meitu.findPicture", paramObject);
 				if(CollectionUtils.isEmpty(list)){
 					String filePath=DateUtils.formatDate(new Date(), "yyyyMMdd")+File.separator+group+File.separator;
-					String fileName= NetUtil.getFileName(imageUrl);  
+					String fileName= getFileName(imageUrl);  
 		            String cosPath="/"+filePath+fileName;
-					String localPath=NetUtil.download(imageUrl, folder+filePath);
+					String localPath=httpClientService.download(imageUrl, folder+filePath+fileName);
 					if(StringUtils.isNoneBlank(localPath)){
 						String access_url=CloudStoreUtil.send2Cloud(cosPath.replace("\\", "/"), localPath);
 						if(StringUtils.isNoneBlank(access_url)){
@@ -112,6 +114,10 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 			isFind=matcher.find();
 		}
 	}
+	
+	private String getFileName(String url) {  
+        return url.substring(url.lastIndexOf("/")+1,url.length());
+    }
 	
 	public static void main(String[] args){
 		MeituCollectorService service=new DoubanCollectorServiceImpl();
