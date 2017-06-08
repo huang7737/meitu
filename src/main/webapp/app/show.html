@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="cache-control" content="no-cache">  
 <title>图片浏览</title>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
 </head>
@@ -19,8 +20,7 @@ $(document).ready(function(){
 	showPicture();
 });
 
-$(window).scroll(
-		function() {
+$(window).scroll(function() {
 		var scrollTop = $(this).scrollTop();
 		var scrollHeight = $(document).height();
 		var windowHeight = $(this).height();
@@ -28,6 +28,16 @@ $(window).scroll(
 			page++;
 			showPicture();
 		}
+});
+
+$(document).on('touchend',function(e) {
+	var scrollTop = $(this).scrollTop();
+	var scrollHeight = $(document).height();
+	var windowHeight = $(this).height();
+	if (scrollTop + windowHeight >= scrollHeight-5) {
+		page++;
+		showPicture();
+	}
 });
 
 function showPicture(){
