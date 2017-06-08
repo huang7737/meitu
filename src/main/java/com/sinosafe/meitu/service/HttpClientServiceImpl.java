@@ -91,7 +91,6 @@ public class HttpClientServiceImpl implements HttpClientService{
 		HttpPost httpPost = new HttpPost(url);
 		try {
 			httpPost.setEntity(new StringEntity(reqData,ContentType.create("text/plain", "UTF-8")));
-			logger.info("开始发送 请求：url" + url);
 
 			CloseableHttpClient client = this.getConnection();
 			CloseableHttpResponse response = client.execute(httpPost);
@@ -102,12 +101,12 @@ public class HttpClientServiceImpl implements HttpClientService{
 				if (entity != null) {
 					resopnse = EntityUtils.toString(entity, "utf-8");
 				}
-				logger.info(" 接收响应：url" + url + " status=" + status);
+				logger.info("Receive response: url" + url + " status=" + status);
 				return entity != null ? resopnse : null;
 			} else {
 				HttpEntity entity = response.getEntity();
 				httpPost.abort();
-				logger.info(" 接收响应：url" + url + " status=" + status + " resopnse=" + EntityUtils.toString(entity, "utf-8"));
+				logger.info("Receive response: url" + url + " status=" + status + " resopnse=" + EntityUtils.toString(entity, "utf-8"));
 				throw new ClientProtocolException("Unexpected response status: " + status);
 			}
 		} catch (Exception e) {
@@ -129,12 +128,12 @@ public class HttpClientServiceImpl implements HttpClientService{
 				if (entity != null) {
 					resopnse = EntityUtils.toString(entity, CharEncoding.UTF_8);
 				}
-				logger.info("接收响应：url" + url + " status=" + status);
+				logger.info("Receive response: url" + url + " status=" + status);
 				return entity != null ? resopnse : null;
 			} else {
 				HttpEntity entity = response.getEntity();
 				httpGet.abort();
-				logger.error("接收响应：url" + url + " status=" + status + " resopnse=" + EntityUtils.toString(entity, "utf-8"));
+				logger.error("Receive response: url" + url + " status=" + status + " resopnse=" + EntityUtils.toString(entity, "utf-8"));
 				throw new ClientProtocolException("Unexpected response status: " + status);
 			}
 		} catch (Exception e) {

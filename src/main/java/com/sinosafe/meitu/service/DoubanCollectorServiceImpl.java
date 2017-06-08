@@ -44,8 +44,15 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 	public void excute() {
 		String[] groupss=groups.split(",");
 		for(String group:groupss){
-			String groupUrl="https://www.douban.com/group/"+group+"/discussion?start=";
-			collectByGroup(group,groupUrl);
+			try {
+				int num = (int) (Math.random() * 10);
+				logger.info("sleep "+num+" seconds");
+				Thread.sleep(num*1000);
+				String groupUrl="https://www.douban.com/group/"+group+"/discussion?start=";
+				collectByGroup(group,groupUrl);
+			}catch(Exception e){
+				logger.error("error",e);
+			}
 		}
 	}
 	
@@ -55,6 +62,9 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 			try {
 				String pageUrl=groupUrl+start;
 				start+=pageSize;
+				int num = (int) (Math.random() * 10);
+				logger.info("sleep "+num+" seconds");
+				Thread.sleep(num*1000);
 				logger.info(pageUrl);
 				String topicListPage=httpClientService.httpGet(pageUrl);
 				if(topicListPage!=null){
