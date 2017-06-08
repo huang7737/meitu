@@ -24,7 +24,7 @@ public class MeituController {
 	
 	@RequestMapping("/listPicture")
 	@ResponseBody
-	public  Map<String, Object> test(HttpServletRequest request,HttpServletResponse response
+	public  Map<String, Object> listPicture(HttpServletRequest request,HttpServletResponse response
 			,@RequestParam("pageSize")String pageSizeStr
 			,@RequestParam("page")String page) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -42,6 +42,15 @@ public class MeituController {
 			resultMap.put("resultCode", "0000");
 			resultMap.put("resultMsg", "系统异常");
 		}
+		return resultMap;
+	}
+	
+	@RequestMapping("/mark")
+	@ResponseBody
+	public  Map<String, Object> mark(HttpServletRequest request,HttpServletResponse response
+			,@RequestParam("imageId")String imageId) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		dao.update("com.sinosafe.meitu.updatePicture", imageId);
 		return resultMap;
 	}
 }

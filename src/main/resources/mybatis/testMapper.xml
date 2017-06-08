@@ -17,7 +17,11 @@
     <!-- 遍历-->
 	<select id="findAllPicture" parameterType="map" resultType="map">
 	<![CDATA[
-		SELECT * FROM meitu_topic order by createDate desc limit ${startIndex},${pageSize}
+		SELECT * FROM meitu_topic where status=1 order by createDate desc limit ${startIndex},${pageSize}
 	]]>
 	</select>
+	
+	<insert id="updatePicture" parameterType="string" > 
+        update  meitu_topic set status=0 where imageId=#{imageId}  
+    </insert>
 </mapper>

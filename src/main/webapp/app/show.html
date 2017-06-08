@@ -9,6 +9,10 @@
 <body>
 	<div id="detail"></div>
 	<div id="more" style="width:100%;height:50px; background:#ccc;display:none;">更多图片</div>
+	<div id="mark" style="width:100%;height:50px;z-index:99;position:absolute;left:0px;top:0px;display:none;">
+		<button id="markBtn" style="width:45%;">mark</button>
+		<button id="cancelBtn" style="width:45%;">cancel</button>
+	</div>
 </body>
 <script type="text/javascript">
 var page=1;
@@ -18,6 +22,30 @@ $(document).ready(function(){
 		showPicture();
 	});
 	showPicture();
+	
+	$("#detail").on("click",function(e){
+		e.preventDefault();
+		if(event.target.nodeName=="IMG"){
+			var pos=$(event.target).position();
+			var imageId=$(event.target).attr("imageId");
+			$("#markBtn").attr("imageId",imageId);
+			$("#mark").css("display","block");
+			$("#mark").css("left",pos.left+"px");
+			$("#mark").css("top",pos.top+"px");
+		}
+	});
+	
+	$("#cancelBtn").on("click",function(e){
+		e.preventDefault();
+		$("#mark").css("display","none");
+	});
+	
+	$("#markBtn").on("click",function(e){
+		e.preventDefault();
+		$.post("/meitu/app/mark",{imageId:$(this).attr("imageId")}, function(result){
+			$("#mark").css("display","none");
+		});
+	});
 });
 
 $(window).scroll(function() {
@@ -31,9 +59,9 @@ $(window).scroll(function() {
 });
 
 $(document).on('touchend',function(e) {
-	var scrollTop = $(this).scrollTop();
+	var scrollTop = $(window).scrollTop();
 	var scrollHeight = $(document).height();
-	var windowHeight = $(this).height();
+	var windowHeight = $(window).height();
 	if (scrollTop + windowHeight >= scrollHeight-5) {
 		page++;
 		showPicture();
@@ -48,7 +76,7 @@ function showPicture(){
 	    }else{
 	    	var imgHtml="";
 	    	for(var i=0;i<result.dataList.length;i++){
-	    		$("#detail").append("<div><img src='"+result.dataList[i].access_url+"' /></div>")
+	    		$("#detail").append("<div><img src='"+result.dataList[i].access_url+"' imageId='"+result.dataList[i].imageId+"'/></div>")
 	    	}
 	    }
 	  });
