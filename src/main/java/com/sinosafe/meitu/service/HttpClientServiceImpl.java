@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.annotation.PostConstruct;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
@@ -46,12 +47,13 @@ public class HttpClientServiceImpl implements HttpClientService{
 	private  Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private PoolingHttpClientConnectionManager poolConnManager;
-	private final int maxTotalPool = 200;
-	private final int maxConPerRoute = 20;
+	private final int maxTotalPool = 10;
+	private final int maxConPerRoute = 5;
 	private final int socketTimeout = 2000;
 	private final int connectionRequestTimeout = 3000;
 	private final int connectTimeout = 1000;
 
+	@PostConstruct
 	public void init() {
 		try {
 			SSLContext sslcontext = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
@@ -77,8 +79,8 @@ public class HttpClientServiceImpl implements HttpClientService{
 	    CloseableHttpClient httpClient = HttpClients.custom()  
 	                .setConnectionManager(poolConnManager).setDefaultRequestConfig(requestConfig).build();  
 	    if(poolConnManager!=null&&poolConnManager.getTotalStats()!=null){  
-	    	logger.info("now client pool "+poolConnManager.getTotalStats().toString());  
-	    }  
+	    	logger.info("Now client pool "+poolConnManager.getTotalStats().toString());  
+	    }
 	    return httpClient;  
 	}
 	
