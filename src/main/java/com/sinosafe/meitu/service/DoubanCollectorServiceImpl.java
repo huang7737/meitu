@@ -89,6 +89,9 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 	
 	private void collectImg(String topicUrl,String group) throws Exception{
 		String topicListPage=httpClientService.httpGet(topicUrl);
+		if(StringUtils.isBlank(topicListPage)){
+			return;
+		}
 		Pattern pattern = Pattern.compile("src=\"([^\"]+?/large/[^\"]+?)\"");
 		Matcher matcher = pattern.matcher(topicListPage);
 		boolean isFind = matcher.find();
