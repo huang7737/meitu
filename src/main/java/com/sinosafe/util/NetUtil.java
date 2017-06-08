@@ -10,10 +10,10 @@ import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -270,6 +270,9 @@ public class NetUtil {
     }
     
     private static void setHearder(HttpGet httpget){
+    	RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5000).setConnectTimeout(5000).build();
+    	httpget.setConfig(requestConfig);
+    	
     	httpget.addHeader("User-Agent","Mozilla/5.0 (Linux; Android 5.1.1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Mobile Safari/537.36");
     	httpget.addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
     	httpget.addHeader("Accept-Encoding","gzip, deflate, sdch");
