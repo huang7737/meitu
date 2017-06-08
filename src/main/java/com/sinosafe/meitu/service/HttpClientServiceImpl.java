@@ -12,7 +12,6 @@ import javax.net.ssl.SSLContext;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -146,41 +145,43 @@ public class HttpClientServiceImpl implements HttpClientService{
 		return null;
 	}
 	
-    public String download(String url, String filepath) {
+    public String download(String url, String filepath) throws IOException {
     	InputStream is=null;
     	FileOutputStream fileout=null;
-        try {  
-            HttpGet httpget = new HttpGet(url);  
-            CloseableHttpClient client = this.getConnection();
-            HttpResponse response = client.execute(httpget);  
-  
-            HttpEntity entity = response.getEntity();  
-            is = entity.getContent();  
-            File file = new File(filepath);  
-            file.getParentFile().mkdirs();  
-            fileout = new FileOutputStream(file);  
-            /** 
-             * 根据实际运行效果 设置缓冲区大小 
-             */  
-            byte[] buffer=new byte[1024];  
-            int ch = 0;  
-            while ((ch = is.read(buffer)) != -1) {  
-                fileout.write(buffer,0,ch);  
-            }  
-             
-            fileout.flush();  
-            String path=file.getPath();
-            logger.info("Download successful:path="+path+",url="+url);
-            return path;
+    	HttpGet httpget = new HttpGet(url);  
+        CloseableHttpClient client = this.getConnection();
+        CloseableHttpResponse response = client.execute(httpget);  
+        try {
+        	int status = response.getStatusLine().getStatusCode();
+        	HttpEntity entity = response.getEntity();
+			if (status >= 200 && status < 300) {
+				is = entity.getContent();  
+	            File file = new File(filepath);  
+	            file.getParentFile().mkdirs();  
+	            fileout = new FileOutputStream(file);  
+	            /** 
+	             * 根据实际运行效果 设置缓冲区大小 
+	             */  
+	            byte[] buffer=new byte[1024];  
+	            int ch = 0;  
+	            while ((ch = is.read(buffer)) != -1) {  
+	                fileout.write(buffer,0,ch);  
+	            }  
+	            fileout.flush();  
+	            String path=file.getPath();
+	            logger.info("Download successful:path="+path+",url="+url);
+	            return path;
+			}
         } catch (Exception e) {  
         	logger.error("error",e); 
         }finally{
-        	try {
-				is.close();
-			} catch (IOException e) {} 
-        	try {
-        		fileout.close();
-			} catch (IOException e) {} 
+        	if(is!=null){
+        		is.close();
+        	}
+			if(fileout!=null){
+				fileout.close();
+			}
+        	response.close();
         }
         return null;  
     }
