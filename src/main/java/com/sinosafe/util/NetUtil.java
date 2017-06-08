@@ -11,11 +11,9 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 
 import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -122,6 +120,7 @@ public class NetUtil {
 			throws DocumentException, UnsupportedEncodingException {
         //HttpClient  
         HttpGet  getMethod = new HttpGet(url);
+        setHearder(getMethod);
 		String result = null;
 		try {
 			CloseableHttpResponse response = client.execute(getMethod);
@@ -141,7 +140,7 @@ public class NetUtil {
 		String result=null;
 		if (statusCode == HttpStatus.SC_OK) {
 			try {
-				HttpEntity resEntity = response.getEntity();  
+				HttpEntity resEntity = response.getEntity();
 		        if (resEntity != null) {  
 					if (TEXT_FORMAT_GBK.equals(textFormat)) {
 						result = EntityUtils.toString(resEntity, "GBK");
@@ -178,7 +177,7 @@ public class NetUtil {
 			int statusCode=response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				try {
-					HttpEntity resEntity = response.getEntity(); 
+					HttpEntity resEntity = response.getEntity();
 	                if (entity != null) {  
 						result = EntityUtils.toString(resEntity, "UTF-8");
 	                }
@@ -242,6 +241,8 @@ public class NetUtil {
     public static String download(String url, String filepath) {  
         try {  
             HttpGet httpget = new HttpGet(url);  
+            setHearder(httpget);
+            
             HttpResponse response = client.execute(httpget);  
   
             HttpEntity entity = response.getEntity();  
@@ -268,6 +269,15 @@ public class NetUtil {
         return null;  
     }
     
+    private static void setHearder(HttpGet httpget){
+    	httpget.addHeader("User-Agent","Mozilla/5.0 (Linux; Android 5.1.1; Nexus 6 Build/LYZ28E) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Mobile Safari/537.36");
+    	httpget.addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+    	httpget.addHeader("Accept-Encoding","gzip, deflate, sdch");
+    	httpget.addHeader("Accept-Language","zh-CN,zh;q=0.8");
+    	httpget.addHeader("Cache-Control","no-cache");
+    	httpget.addHeader("Connection","keep-alive");
+    }
+    
     /** 
      * 获取response header中Content-Disposition中的filename值 
      * @param response 
@@ -275,5 +285,14 @@ public class NetUtil {
      */  
     public static String getFileName(String url) {  
         return url.substring(url.lastIndexOf("/")+1,url.length());
-    }  
+    }
+    
+    public static void main(String[] args){
+    	try {
+			String str=NetUtil.httpGet("https://www.baidu.com/", null);
+			System.out.println(str);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 }
