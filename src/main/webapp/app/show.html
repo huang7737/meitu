@@ -2,16 +2,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="cache-control" content="no-cache">  
+<meta http-equiv="cache-control" content="no-cache"> 
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=0"> 
 <title>图片浏览</title>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+<script>
+	var offWidth = window.screen.width/30;
+	document.getElementsByTagName("html")[0].style.fontSize = offWidth + 'px';
+</script>
+<style>
+</style>
 </head>
 <body>
 	<div id="detail"></div>
-	<div id="more" style="width:100%;height:50px; background:#ccc;display:none;">更多图片</div>
-	<div id="mark" style="width:100%;height:50px;z-index:99;position:absolute;left:0px;top:0px;display:none;">
-		<button id="markBtn" style="width:45%;">mark</button>
-		<button id="cancelBtn" style="width:45%;">cancel</button>
+	<div id="more" style="width:100%;height:4rem; background:#ccc;display:none;">更多图片</div>
+	<div id="mark" style="width:100%;height:4rem;z-index:99;position:absolute;left:0px;top:0px;display:none;">
+		<button id="markBtn" style="width:8rem;">删除</button>
+		<button id="cancelBtn" style="width:8rem;">取消</button>
 	</div>
 </body>
 <script type="text/javascript">
@@ -26,12 +33,11 @@ $(document).ready(function(){
 	$("#detail").on("click",function(e){
 		e.preventDefault();
 		if(event.target.nodeName=="IMG"){
-			var pos=$(event.target).position();
 			var imageId=$(event.target).attr("imageId");
 			$("#markBtn").attr("imageId",imageId);
 			$("#mark").css("display","block");
-			$("#mark").css("left",pos.left+"px");
-			$("#mark").css("top",pos.top+"px");
+			$("#mark").css("left",(e.pageX-40)+"px");
+			$("#mark").css("top",e.pageY+"px");
 		}
 	});
 	
@@ -42,7 +48,9 @@ $(document).ready(function(){
 	
 	$("#markBtn").on("click",function(e){
 		e.preventDefault();
-		$.post("/meitu/app/mark",{imageId:$(this).attr("imageId")}, function(result){
+		var id=$(this).attr("imageId");
+		$.post("/meitu/app/mark",{imageId:id}, function(result){
+			$("img[imageId='"+id+"']").remove();
 			$("#mark").css("display","none");
 		});
 	});
