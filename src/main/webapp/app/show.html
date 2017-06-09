@@ -11,6 +11,10 @@
 	document.getElementsByTagName("html")[0].style.fontSize = offWidth + 'px';
 </script>
 <style>
+img {
+  max-width: 100%;
+  height:auto;
+}
 </style>
 </head>
 <body>
@@ -84,7 +88,7 @@ function showPicture(){
 	    }else{
 	    	var imgHtml="";
 	    	for(var i=0;i<result.dataList.length;i++){
-	    		$("#detail").append("<div><img width='100%' src='"+result.dataList[i].access_url+"' imageId='"+result.dataList[i].imageId+"'/></div>")
+	    		$("#detail").append("<div><img src='"+result.dataList[i].access_url+"' imageId='"+result.dataList[i].imageId+"'/></div>")
 	    	}
 	    }
 	  });
