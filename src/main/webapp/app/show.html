@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="cache-control" content="no-cache"> 
-<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=0"> 
+<meta name="viewport" content="initial-scale=1, maximum-scale=2, minimum-scale=0.5, user-scalable=yes"> 
 <title>图片浏览</title>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
 <script>
@@ -14,7 +14,7 @@
 </style>
 </head>
 <body>
-	<div id="detail"></div>
+	<div id="detail" style="width:100%;"></div>
 	<div id="more" style="width:100%;height:4rem; background:#ccc;display:none;">更多图片</div>
 	<div id="mark" style="width:100%;height:4rem;z-index:99;position:absolute;left:0px;top:0px;display:none;">
 		<button id="markBtn" style="width:8rem;">删除</button>
@@ -84,7 +84,7 @@ function showPicture(){
 	    }else{
 	    	var imgHtml="";
 	    	for(var i=0;i<result.dataList.length;i++){
-	    		$("#detail").append("<div><img src='"+result.dataList[i].access_url+"' imageId='"+result.dataList[i].imageId+"'/></div>")
+	    		$("#detail").append("<div><img width='100%' src='"+result.dataList[i].access_url+"' imageId='"+result.dataList[i].imageId+"'/></div>")
 	    	}
 	    }
 	  });
