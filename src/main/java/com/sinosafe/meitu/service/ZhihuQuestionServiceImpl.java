@@ -38,7 +38,7 @@ public class ZhihuQuestionServiceImpl implements ZhihuQuestionService{
 				for(Element img:imgs){
 					String imgUrl=img.attr("data-original");
 					try {
-						service.download(imgUrl, "d:\\zhihu\\"+imgUrl.substring(imgUrl.lastIndexOf("/")+1));
+						service.download(imgUrl, "d:\\zhihu\\"+questionId+"\\"+imgUrl.substring(imgUrl.lastIndexOf("/")+1));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -65,7 +65,7 @@ public class ZhihuQuestionServiceImpl implements ZhihuQuestionService{
 	
 	public static void main(String[] args){
 		ZhihuQuestionService questionService=new ZhihuQuestionServiceImpl();
-		questionService.getPictureByQuestionId("22954883");
+		questionService.getPictureByQuestionId("60288863");
 	}
 	
 }
