@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
@@ -118,7 +119,12 @@ public class HttpClientServiceImpl implements HttpClientService{
 	}
 	
 	public String httpGet(String url){
+		return httpGet(url,null);
+	}
+	
+	public String httpGet(String url,Map<String,String> headers){
 		HttpGet httpGet = new HttpGet(url);
+		setHeader(httpGet,headers);
 		try {
 			CloseableHttpClient client = this.getConnection();
 			CloseableHttpResponse response = client.execute(httpGet);
@@ -143,6 +149,15 @@ public class HttpClientServiceImpl implements HttpClientService{
 		}
 		
 		return null;
+	}
+	
+	private void setHeader(HttpGet httpGet,Map<String,String> headers){
+		if(headers!=null){
+			Set<String> keys=headers.keySet();
+			for(String key:keys){
+				httpGet.setHeader(key, headers.get(key));
+			}
+		}
 	}
 	
     public String download(String url, String filepath) throws IOException {
