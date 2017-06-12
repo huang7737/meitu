@@ -1,11 +1,22 @@
 package com.sinosafe.meitu.service;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -66,6 +77,14 @@ public class ZhihuQuestionServiceImpl implements ZhihuQuestionService{
 	public static void main(String[] args){
 		ZhihuQuestionService questionService=new ZhihuQuestionServiceImpl();
 		questionService.getPictureByQuestionId("60288863");
+//		String url="https://api-cn.faceplusplus.com/humanbodypp/beta/detect";
+//		String apiKey="rWLuQjb76c2GlvoaV8DYutx1lFCsuBCq";
+//		String apiSecert="xxIWGOMAb0IHyNLA9LmWLzYFzoynmWAT";   
+//		HttpClientService service=new HttpClientServiceImpl();
+//		Map<String,String> header=new HashMap<String,String>();
+//		header.put("api_key", apiKey);
+//		header.put("api_secret", apiSecert);
+//		String retStr=service.sendFile(url, header, new File("D:\\zhihu\\4.jpg"));
+//        System.out.println(retStr);
 	}
-	
 }
