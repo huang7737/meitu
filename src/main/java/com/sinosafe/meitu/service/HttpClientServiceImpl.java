@@ -28,6 +28,9 @@ import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -87,7 +90,7 @@ public class HttpClientServiceImpl implements HttpClientService{
 	public String httpPost(String url, String reqData) {
 		String returnStr = null;
 		// 参数检测
-		if (StringUtils.isNotBlank(url)) {
+		if (StringUtils.isBlank(url)) {
 			return returnStr;
 		}
 		HttpPost httpPost = new HttpPost(url);
@@ -114,6 +117,50 @@ public class HttpClientServiceImpl implements HttpClientService{
 		} catch (Exception e) {
 			httpPost.abort();
 			logger.error(" Exception" + e.toString() + " url=" + url + " reqData=" + reqData);
+		}
+		return returnStr;
+	}
+	
+	public String sendFile(String url, Map<String,String> header,File file) {
+		String returnStr = null;
+		// 参数检测
+		if (StringUtils.isBlank(url)) {
+			return returnStr;
+		}
+		HttpPost httpPost = new HttpPost(url);
+		try {
+			MultipartEntityBuilder meBuilder = MultipartEntityBuilder.create();
+			if(header!=null){
+				Set<String> keys=header.keySet();
+				for(String key:keys){
+					meBuilder.addPart(key,new StringBody(header.get(key), ContentType.TEXT_PLAIN));
+				}
+			}
+	        FileBody fileBody = new FileBody(file);    
+	        meBuilder.addPart("image_file", fileBody);     
+	        HttpEntity reqEntity = meBuilder.build();    
+	        httpPost.setEntity(reqEntity);  
+
+			CloseableHttpClient client = this.getConnection();
+			CloseableHttpResponse response = client.execute(httpPost);
+			int status = response.getStatusLine().getStatusCode();
+			if (status >= 200 && status < 300) {
+				HttpEntity entity = response.getEntity();
+				String resopnse = "";
+				if (entity != null) {
+					resopnse = EntityUtils.toString(entity, "utf-8");
+				}
+				logger.info("Receive response: url" + url + " status=" + status);
+				return entity != null ? resopnse : null;
+			} else {
+				HttpEntity entity = response.getEntity();
+				httpPost.abort();
+				logger.info("Receive response: url" + url + " status=" + status + " resopnse=" + EntityUtils.toString(entity, "utf-8"));
+				throw new ClientProtocolException("Unexpected response status: " + status);
+			}
+		} catch (Exception e) {
+			httpPost.abort();
+			logger.error(" Exception" + e.toString() + " url=" + url);
 		}
 		return returnStr;
 	}
