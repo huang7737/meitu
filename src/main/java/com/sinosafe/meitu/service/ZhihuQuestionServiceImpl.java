@@ -65,7 +65,7 @@ public class ZhihuQuestionServiceImpl implements ZhihuQuestionService{
 	
 	public static void main(String[] args){
 		ZhihuQuestionService questionService=new ZhihuQuestionServiceImpl();
-		questionService.getPictureByQuestionId("60288863");
+		questionService.getPictureByQuestionId("57973987");//
 	}
 	
 }
