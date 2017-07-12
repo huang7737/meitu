@@ -89,7 +89,7 @@ public class DoubanCollectorServiceImpl implements MeituCollectorService{
 		if(StringUtils.isBlank(topicListPage)){
 			return;
 		}
-		Pattern pattern = Pattern.compile("src=\"([^\"]+?/large/[^\"]+?)\"");
+		Pattern pattern = Pattern.compile("src=\"([^\"]+?/(large|llarge)/[^\"]+?)\"");
 		Matcher matcher = pattern.matcher(topicListPage);
 		boolean isFind = matcher.find();
 		if(!isFind){
